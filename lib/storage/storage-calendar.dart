@@ -13,19 +13,26 @@
 
 part of openreception.storage;
 
-abstract class Contact {
+/**
+ * TODO: Deprecate the calendar*event methods and rename them to calendar*entry.
+ */
+abstract class Calendar {
 
-  Future<Model.BaseContact> get(int contactID);
+  Future<Iterable<Model.CalendarEntry>> receptionCalendar (int receptionID);
 
-  Future<Iterable<Model.BaseContact>> list();
+  Future<Iterable<Model.CalendarEntry>> contactCalendar
+    (int receptionID, int contactID);
 
-  Future<Iterable<Model.Contact>> listByReception(int receptionID, {Model.ContactFilter filter});
+  Future<Model.CalendarEntry> receptionCalendarEntry
+    (int receptionID, int eventID);
 
-  Future<Model.Contact> getByReception(int contactID, int receptionID);
+  Future<Model.CalendarEntry> contactCalendarEntry
+    (int receptionID, int contactID, int eventID);
 
-  Future remove(Model.BaseContact contact);
+  Future<Model.CalendarEntry> calendarEventCreate (Model.CalendarEntry event);
 
-  Future<Model.BaseContact> create(Model.BaseContact contact);
+  Future<Model.CalendarEntry> calendarEventUpdate (Model.CalendarEntry event);
 
-  Future<Model.BaseContact> update(Model.BaseContact contact);
+  Future calendarEventRemove (Model.CalendarEntry event);
+
 }
