@@ -97,9 +97,59 @@ RETURNING
   /**
    *
    */
-  Future<List<Model.Message>> list({Model.MessageFilter filter: null}) async {
+  Future<List<Model.Message>> listSaved() async {
+    final String sql = '''
+SELECT
+  message.id,
+  message,
+  call_id,
+  recipients,
+  context_contact_id,
+  context_reception_id,
+  context_contact_name,
+  context_reception_name,
+  taken_from_name,
+  taken_from_company,
+  taken_from_phone,
+  taken_from_cellphone,
+  taken_from_localexten,
+  send_from      AS agent_address,
+  flags,
+  created_at,
+  taken_by_agent AS taken_by_agent_id,
+  users.name     AS taken_by_agent_name,
+  FALSE AS enqueued,
+  FALSE AS sent
+FROM
+  messages message
+JOIN
+  users
+ON
+  taken_by_agent = users.id
+WHERE
+  message.id NOT IN ((SELECT message_id FROM message_queue_history)
+             UNION (SELECT message_id FROM message_queue))
+ORDER BY
+ message.id DESC''';
+    try {
+      final Iterable<PG.Row> rows = await _connection.query(sql);
+      return rows.map(_rowToMessage);
+    } on Storage.SqlError catch (error) {
+      throw new Storage.ServerError(error.toString());
+    }
+  }
+
+  /**
+   *
+   */
+  Future<List<Model.Message>> listOrig(
+      {Model.MessageFilter filter: null}) async {
     if (filter == null) {
       filter = new Model.MessageFilter.empty();
+    }
+
+    if (filter.messageState == Model.MessageState.Saved) {
+      return listSaved();
     }
 
     final sqlMacro = 'WITH $sqlQueueStatus,$sqlSentStatus';
@@ -153,6 +203,110 @@ LIMIT
     } on Storage.SqlError catch (error) {
       throw new Storage.ServerError(error.toString());
     }
+  }
+
+  /**
+   *
+   */
+  Future<List<Model.Message>> list({Model.MessageFilter filter: null}) async {
+    if (filter == null) {
+      filter = new Model.MessageFilter.empty();
+    }
+
+    if (filter.messageState == Model.MessageState.Saved) {
+      return listSaved();
+    }
+
+    final String sql = '''
+SELECT
+  message.id,
+  message,
+  call_id,
+  recipients,
+  context_contact_id,
+  context_reception_id,
+  context_contact_name,
+  context_reception_name,
+  taken_from_name,
+  taken_from_company,
+  taken_from_phone,
+  taken_from_cellphone,
+  taken_from_localexten,
+  send_from      AS agent_address,
+  flags,
+  created_at,
+  taken_by_agent AS taken_by_agent_id,
+  users.name     AS taken_by_agent_name,
+  FALSE AS enqueued,
+  FALSE AS sent
+FROM
+  messages message
+JOIN
+  users
+ON
+  taken_by_agent = users.id
+${filter.asSQL}
+ORDER BY
+  message.id DESC
+LIMIT
+  ${filter.limitCount}''';
+
+    try {
+      final Iterable<PG.Row> rows = await _connection.query(sql);
+
+      final Iterable<Model.Message> fetched = rows.map(_rowToMessage);
+      final Set<int> mids = fetched.map((msg) => msg.ID).toSet();
+      final Set<int> enqueuedMids = (await enqueuedIds(mids)).toSet();
+      final Set<int> sentMids = (await sentIds(mids)).toSet();
+
+      return fetched.map((msg) {
+        if (enqueuedMids.contains(msg.ID)) {
+          msg.enqueued = true;
+        }
+        if (sentMids.contains(msg.ID)) {
+          msg.sent = true;
+        }
+
+        return msg;
+      });
+    } on Storage.SqlError catch (error) {
+      throw new Storage.ServerError(error.toString());
+    }
+  }
+
+  Future<Iterable<int>> enqueuedIds(Iterable<int> ids) async {
+    if (ids.isEmpty) {
+      return [];
+    }
+    final String sql = '''
+SELECT
+  message_id as mid
+FROM
+  message_queue
+WHERE
+  message_id IN (${ids.join(',')})
+''';
+
+    final Iterable<PG.Row> rows = await _connection.query(sql);
+    return rows.map((row) => row.mid);
+  }
+
+  Future<Iterable<int>> sentIds(Iterable<int> ids) async {
+    if (ids.isEmpty) {
+      return [];
+    }
+
+    final String sql = '''
+SELECT
+  message_id as mid
+FROM
+  message_queue_history
+WHERE
+  message_id IN (${ids.join(',')})
+''';
+
+    final Iterable<PG.Row> rows = await _connection.query(sql);
+    return rows.map((row) => row.mid);
   }
 
   /**
