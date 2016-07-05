@@ -13,6 +13,8 @@
 
 library openreception.utilities;
 
+import 'dart:html';
+
 import 'package:intl/intl.dart';
 
 /**
@@ -127,6 +129,22 @@ final DateTime never = _epoch;
  *
  */
 final DateTime _epoch = new DateTime.fromMillisecondsSinceEpoch(0, isUtc: true);
+
+/**
+ * Replace ¤ with ⚙ and -> with ➔ in [elem].
+ */
+void specialCharReplace(TextAreaElement elem) {
+  final String orgValue = elem.value;
+  final String newValue = elem.value.replaceAll('->', '➔').replaceAll('¤', '⚙');
+
+  if (orgValue != newValue) {
+    final int cursorIndex = elem.selectionStart;
+    final int diffLength = orgValue.length - newValue.length;
+    elem.value = newValue;
+    elem.selectionStart = cursorIndex - diffLength;
+    elem.selectionEnd = cursorIndex - diffLength;
+  }
+}
 
 /**
    * Return the weeknumber for [timestamp]
