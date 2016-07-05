@@ -104,17 +104,17 @@ class MessageFilter {
   /**
    * Check if this filter is active (any field is set).
    */
-  bool get active => userID != User.noID ||
+  bool get active =>
+      userID != User.noID ||
       receptionID != Reception.noID ||
       contactID != Contact.noID ||
-      upperMessageID != Message.noID ||
-      messageState.isNotEmpty;
+      upperMessageID != Message.noID;
 
   /**
    * Check if the filter applies to [message].
    */
-  bool appliesTo(Message message) => [message.context.contactID, Contact.noID]
-          .contains(this.contactID) &&
+  bool appliesTo(Message message) =>
+      [message.context.contactID, Contact.noID].contains(this.contactID) &&
       [message.context.receptionID, Reception.noID]
           .contains(this.receptionID) &&
       [message.senderId, User.noID].contains(this.userID) &&
@@ -133,11 +133,11 @@ class MessageFilter {
   @override
   bool operator ==(MessageFilter other) =>
       this.upperMessageID == other.upperMessageID &&
-          this.limitCount == other.limitCount &&
-          this.messageState == other.messageState &&
-          this.userID == other.userID &&
-          this.receptionID == other.receptionID &&
-          this.contactID == other.contactID;
+      this.limitCount == other.limitCount &&
+      this.messageState == other.messageState &&
+      this.userID == other.userID &&
+      this.receptionID == other.receptionID &&
+      this.contactID == other.contactID;
 
   /**
    * JSON serialization function.
@@ -197,24 +197,6 @@ class MessageFilter {
 
     if (contactID != Contact.noID) {
       retval.add('context_contact_id = ${this.contactID}');
-    }
-
-    switch (this._messageState) {
-      case MessageState.Pending:
-        retval.add('enqueued');
-        break;
-
-      case MessageState.Sent:
-        retval.add('sent');
-        break;
-
-      case MessageState.Saved:
-        retval.add('(NOT enqueued AND NOT sent)');
-        break;
-
-      case MessageState.NotSaved:
-        retval.add('(enqueued OR sent)');
-        break;
     }
 
     return retval;
