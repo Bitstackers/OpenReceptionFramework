@@ -73,4 +73,10 @@ class PhoneNumber {
         Key.tags: tags,
         Key.confidential: confidential
       };
+
+  /**
+   * Returns the endpoint containing only numeric characters. Everything else is
+   * removed from the string.
+   */
+  String get SanitizedEndpoint => endpoint.replaceAll(new RegExp('[^0-9]'), '');
 }
