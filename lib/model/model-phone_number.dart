@@ -78,5 +78,5 @@ class PhoneNumber {
    * Returns the endpoint containing only numeric characters. Everything else is
    * removed from the string.
    */
-  String get SanitizedEndpoint => endpoint.replaceAll(new RegExp('[^0-9]'), '');
+  String get sanitizedEndpoint => endpoint.replaceAll(new RegExp('[^0-9]'), '');
 }
