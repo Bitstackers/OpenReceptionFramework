@@ -155,8 +155,13 @@ Model.Contact _rowToContact(PG.Row row) {
   List relations = [];
   List responsibilities = [];
   List messagePrerequisites = [];
+  List whenWhats = [];
 
   if (row.attributes.isNotEmpty) {
+    if (row.attributes.containsKey(Key.whenWhat)) {
+      whenWhats = row.attributes[Key.whenWhat];
+    }
+
     if (row.attributes.containsKey(Key.backup)) {
       backupContacts = row.attributes[Key.backup];
     }
@@ -236,7 +241,8 @@ Model.Contact _rowToContact(PG.Row row) {
     ..tags = tags as Iterable<String>
     ..statusEmail = row.status_email
     ..workhours = workhours as Iterable<String>
-    ..messagePrerequisites = messagePrerequisites as Iterable<String>;
+    ..messagePrerequisites = messagePrerequisites as Iterable<String>
+    ..whenWhats = whenWhats.map((Map m) => new Model.WhenWhat.fromJson(m));
 
   return contact;
 }

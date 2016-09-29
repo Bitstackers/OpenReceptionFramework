@@ -83,7 +83,8 @@ class Contact {
         Key.relations: relations,
         Key.responsibilities: responsibilities,
         Key.messagePrerequisites: messagePrerequisites,
-        Key.statusEmail: statusEmail
+        Key.statusEmail: statusEmail,
+        Key.whenWhat: whenWhats.map((WhenWhat ww) => ww.asMap).toList()
       };
 
   Map toJson() => this.asMap;
