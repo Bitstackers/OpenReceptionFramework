@@ -71,5 +71,6 @@ part 'model/model-user.dart';
 part 'model/model-user_group.dart';
 part 'model/model-user_identity.dart';
 part 'model/model-user_status.dart';
+part 'model/model-when_what.dart';
 
 const String libraryName = "openreception.model";

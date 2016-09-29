@@ -68,6 +68,7 @@ abstract class ModelContact {
     expect(builtObject.workhours, equals(deserializedObject.workhours));
     expect(builtObject.messagePrerequisites,
         equals(deserializedObject.messagePrerequisites));
+    expect(builtObject.whenWhats, equals(deserializedObject.whenWhats));
   }
 
   static Model.Contact buildObject() {
@@ -99,6 +100,11 @@ abstract class ModelContact {
     final List<String> workhours = ['Quite frankly; never'];
     final List<String> messagePrerequisites = ['[fishcode]'];
 
+    final List<Model.WhenWhat> whenWhats = [
+      new Model.WhenWhat('man-fri 08:00-09:00', 'Meeting'),
+      new Model.WhenWhat('wed 12:00-12:30', 'lunch')
+    ];
+
     Model.Contact builtObject = new Model.Contact.empty()
       ..receptionID = receptionID
       ..ID = contactID
@@ -117,7 +123,8 @@ abstract class ModelContact {
       ..responsibilities = responsibilities
       ..tags = tags
       ..workhours = workhours
-      ..messagePrerequisites = messagePrerequisites;
+      ..messagePrerequisites = messagePrerequisites
+      ..whenWhats = whenWhats;
 
     expect(builtObject.receptionID, equals(receptionID));
     expect(builtObject.ID, equals(contactID));
@@ -137,6 +144,7 @@ abstract class ModelContact {
     expect(builtObject.tags, equals(tags));
     expect(builtObject.workhours, equals(workhours));
     expect(builtObject.messagePrerequisites, equals(messagePrerequisites));
+    expect(builtObject.whenWhats, equals(whenWhats));
 
     return builtObject;
   }

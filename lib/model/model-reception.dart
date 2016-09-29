@@ -56,6 +56,7 @@ class Reception extends ReceptionStub {
   List<String> customerTypes = [];
   List<PhoneNumber> telephoneNumbers = [];
   String miniWiki = '';
+  List<WhenWhat> whenWhats = <WhenWhat>[];
 
   String get shortGreeting =>
       this._shortGreeting.isNotEmpty ? this._shortGreeting : this.greeting;
@@ -87,7 +88,8 @@ class Reception extends ReceptionStub {
         Key.phoneNumbers:
             telephoneNumbers.map((PhoneNumber number) => number.asMap).toList(),
         Key.websites: websites,
-        Key.miniWiki: miniWiki
+        Key.miniWiki: miniWiki,
+        Key.whenWhat: whenWhats.map((WhenWhat ww) => ww.asMap).toList()
       };
 
   void set attributes(Map attributes) {
@@ -108,6 +110,11 @@ class Reception extends ReceptionStub {
       }
 
       this.telephoneNumbers.addAll(pns);
+    }
+
+    if (attributes.containsKey(Key.whenWhat)) {
+      Iterable values = attributes[Key.whenWhat];
+      whenWhats = values.map((Map map) => new WhenWhat.fromJson(map)).toList();
     }
 
     this

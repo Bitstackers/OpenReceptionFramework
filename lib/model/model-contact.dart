@@ -69,6 +69,7 @@ class Contact {
   List<String> relations = [];
   List<String> departments = [];
   List<String> infos = [];
+  List<WhenWhat> whenWhats = <WhenWhat>[];
 
   Map get attributes => {
         Key.departments: departments,
@@ -106,7 +107,8 @@ class Contact {
         Key.relations: this.relations,
         Key.responsibilities: this.responsibilities,
         Key.messagePrerequisites: messagePrerequisites,
-        Key.statusEmail: statusEmail
+        Key.statusEmail: statusEmail,
+        Key.whenWhat: whenWhats.map((WhenWhat ww) => ww.asMap).toList()
       };
 
   Contact.fromMap(Map map) {
@@ -117,6 +119,11 @@ class Contact {
     });
 
     this.phones.addAll(phones.toList());
+
+    if (map.containsKey(Key.whenWhat)) {
+      Iterable values = map[Key.whenWhat];
+      whenWhats = values.map((Map map) => new WhenWhat.fromJson(map)).toList();
+    }
 
     this.ID = mapValue(Key.contactID, map);
     this.receptionID = mapValue(Key.receptionID, map);

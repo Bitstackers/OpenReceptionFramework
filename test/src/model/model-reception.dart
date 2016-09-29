@@ -66,6 +66,7 @@ abstract class ModelReception {
         equals(deserializedObject.telephoneNumbers));
     expect(builtObject.vatNumbers, equals(deserializedObject.vatNumbers));
     expect(builtObject.websites, equals(deserializedObject.websites));
+    expect(builtObject.whenWhats, equals(deserializedObject.whenWhats));
   }
 
   /**
@@ -107,6 +108,10 @@ abstract class ModelReception {
     ];
     final List<String> vatNumbers = ['123455'];
     final List<String> websites = ['www.over-the-rainbow'];
+    final List<Model.WhenWhat> whenWhats = [
+      new Model.WhenWhat('man-fri 08:00-09:00', 'Meeting'),
+      new Model.WhenWhat('wed 12:00-12:30', 'lunch')
+    ];
 
     Model.Reception buildObject = new Model.Reception.empty()
       ..addresses = addresses
@@ -130,7 +135,8 @@ abstract class ModelReception {
       ..shortGreeting = shortGreeting
       ..telephoneNumbers = telephoneNumbers
       ..vatNumbers = vatNumbers
-      ..websites = websites;
+      ..websites = websites
+      ..whenWhats = whenWhats;
 
     expect(buildObject.addresses, equals(addresses));
     expect(buildObject.dialplan, equals(dialplan));
@@ -155,6 +161,7 @@ abstract class ModelReception {
     expect(buildObject.telephoneNumbers, equals(telephoneNumbers));
     expect(buildObject.vatNumbers, equals(vatNumbers));
     expect(buildObject.websites, equals(websites));
+    expect(buildObject.whenWhats, equals(whenWhats));
 
     return buildObject;
   }
