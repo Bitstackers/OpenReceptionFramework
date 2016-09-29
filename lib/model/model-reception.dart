@@ -197,9 +197,9 @@ class Reception extends ReceptionStub {
       };
 
   void validate() {
-    if (this.greeting == null || this.greeting.isEmpty) throw new StateError(
-        'Greeting not allowed to be empty. '
-        'Value: "${this.greeting}" Id: "${this.ID}" ReceptionName: "${this.fullName}"');
+    if (this.greeting == null || this.greeting.isEmpty)
+      throw new StateError('Greeting not allowed to be empty. '
+          'Value: "${this.greeting}" Id: "${this.ID}" ReceptionName: "${this.fullName}"');
   }
 
   @override
