@@ -125,8 +125,8 @@ class _WhenBlock {
 class WhenWhat {
   final List<_WhenBlock> _blocks = <_WhenBlock>[];
   final List<String> _errors = <String>[];
-  String _what;
-  String _when;
+  String _what = '';
+  String _when = '';
 
   /// Define "when" the "what" is relevant.
   ///
@@ -147,8 +147,10 @@ class WhenWhat {
   }
 
   WhenWhat.fromJson(Map<String, dynamic> map) {
-    _what = map[Key.what].trim();
-    _when = map[Key.when].trim();
+    _what = map[Key.what];
+    _when = map[Key.when];
+    _what = _what.trim();
+    _when = _when.trim();
     _blockSplit();
   }
 
