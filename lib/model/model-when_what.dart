@@ -147,10 +147,13 @@ class WhenWhat {
   }
 
   WhenWhat.fromJson(Map<String, dynamic> map) {
-    _what = map[Key.what];
-    _when = map[Key.when];
-    _what = _what.trim();
-    _when = _when.trim();
+    if (map.containsKey(Key.what)) {
+      _what = map[Key.what].toString().trim();
+    }
+
+    if (map.containsKey(Key.when)) {
+      _when = map[Key.when].toString().trim();
+    }
     _blockSplit();
   }
 
