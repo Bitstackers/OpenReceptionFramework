@@ -108,5 +108,12 @@ class MessageEndpoint {
    */
   @override
   bool operator ==(MessageEndpoint other) =>
-      this.type == other.type && this.address == other.address;
+      type == other.type &&
+      address == other.address &&
+      confidential == other.confidential &&
+      enabled == other.enabled &&
+      description == other.description &&
+      priority == other.priority &&
+      name == other.name &&
+      role == other.role;
 }
