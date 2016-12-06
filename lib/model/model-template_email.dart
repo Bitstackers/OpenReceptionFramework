@@ -57,7 +57,7 @@ class TemplateEmail extends Template {
     sb.write('${_sender.name}<br>');
     sb.write('Responsum K/S<br><br>');
     sb.write(
-        'Besøg os på <a href="https://plus.google.com/+responsum/posts">Google+</a> | <a href="https://www.facebook.com/responsumks">Facebook</a> | <a href="https://twitter.com/responsumks">Twitter</a> | <a href="http://responsum.dk">responsum.dk</a><br><br>');
+        'Nyheder & driftstatus <a href="https://plus.google.com/+responsum/posts">Google+</a> | <a href="https://www.facebook.com/responsumks">Facebook</a> | <a href="https://twitter.com/responsumks">Twitter</a><br><br>');
 
     return sb.toString();
   }
